@@ -1,0 +1,32 @@
+#BlueJ class context
+comment0.target=SWorld
+comment1.params=wide\ high\ cellSize\ scrollWide\ scrollHigh\ scrollType
+comment1.target=SWorld(int,\ int,\ int,\ int,\ int,\ int)
+comment10.params=
+comment10.target=int\ getScrolledX()
+comment10.text=private\ void\ scrollBackground()\r\n\ \ \ \ {\r\n\ \ \ \ \ \ \ \ if\ (background\ \=\=\ null)\ return;\r\n\ \ \ \ \ \ \ \ int\ w\ \=\ getWidth(),\ h\ \=\ getHeight(),\ c\ \=\ getCellSize();\r\n\ \ \ \ \ \ \ \ int\ bw\ \=\ background.getWidth(),\ bh\ \=\ background.getHeight();\r\n\ \ \ \ \ \ \ \ getBackground().drawImage(background,\ (w*c-bw)/2-scrolledX*c,\ (h*c-bh)/2-scrolledY*c);\r\n}
+comment11.params=
+comment11.target=int\ getScrollingWidth()
+comment12.params=
+comment12.target=int\ getScrollingHeight()
+comment13.params=
+comment13.target=double\ getGravity()
+comment14.params=gravity
+comment14.target=void\ setGravity(double)
+comment2.params=wide\ high\ cellSize\ scrollWide\ scrollType
+comment2.target=SWorld(int,\ int,\ int,\ int,\ int)
+comment3.params=main\ x\ y\ xRange\ yRange
+comment3.target=void\ setMainActor(greenfoot.Actor,\ int,\ int,\ int,\ int)
+comment4.params=
+comment4.target=void\ scrollObjects()
+comment5.params=obj\ xLoc\ yLoc\ scroller
+comment5.target=void\ addObject(greenfoot.Actor,\ int,\ int,\ boolean)
+comment6.params=obj\ xLoc\ yLoc
+comment6.target=void\ addObject(greenfoot.Actor,\ int,\ int)
+comment7.params=obj
+comment7.target=void\ removeObject(greenfoot.Actor)
+comment8.params=objs
+comment8.target=void\ removeObjects(java.util.List)
+comment9.params=
+comment9.target=void\ act()
+numComments=15
