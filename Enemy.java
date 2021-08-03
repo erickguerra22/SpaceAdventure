@@ -12,24 +12,27 @@ public class Enemy extends Actor
      * Act - do whatever the Enemy wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
+    private int groundHeight = getImage().getHeight()/2; 
+    private int groundWidth = getImage().getWidth()/2;
     int speed = -3;
     int life = 2;
-    //int count = 0;
+    GifImage image = new GifImage("Alien.gif");
     public Enemy(){
         getImage().mirrorHorizontally();
     }
     public void act()
     {
-        //count++;
+        setImage(image.getCurrentImage());
         moveAround();
+        bounce();
         kill();
         die();
     }
     public void kill(){
         Actor astronauta = getOneIntersectingObject(Astronaut.class);
         if(astronauta!=null){
-            ((Mlendo)getWorld()).getPlayer1().loseLife(1);
             astronauta.setLocation(31,34);
+            ((SWorld)getWorld()).getCurrentPlayer().loseLife(1);
         }
     }
     public void die(){
@@ -39,16 +42,35 @@ public class Enemy extends Actor
             if(life >0)
                 life--;
             else{
-                ((Mlendo)getWorld()).getPlayer1().addPoints(5);
+                ((SWorld)getWorld()).getCurrentPlayer().addPoints(100);
                 getWorld().removeObject(this);
             }
         }
     }
     
-    public void moveAround(){
-        if(!isTouching(Suelo.class)){
+    public boolean touchingGround(){
+        Actor groundBelow = getOneObjectAtOffset(0,groundHeight+20,Suelo.class);
+        if (groundBelow != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public void bounce(){
+        Actor groundBack = getOneObjectAtOffset(-groundWidth+5,0,Suelo.class);
+        Actor groundFront = getOneObjectAtOffset(groundWidth-5,0,Suelo.class);
+        if (groundFront!=null){
             speed = -speed;
-            getImage().mirrorHorizontally();
+        }
+        if (groundBack!=null){
+            speed = -speed;
+        }
+    }
+    
+    public void moveAround(){
+        if(touchingGround() == false){
+            speed = -speed;
         }
         setLocation(getX() + speed, getY());
     }
