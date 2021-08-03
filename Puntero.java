@@ -17,5 +17,6 @@ public class Puntero extends Actor
     }
     public void act()
     {
+
     }
 }

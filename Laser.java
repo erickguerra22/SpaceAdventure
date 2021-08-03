@@ -11,15 +11,15 @@ public class Laser extends Actor
     private int speed;
     public void act()
     {
-        move(speed);
         onBorders();
+        move(speed);
     }
     public void setSpeed(int speed){
         this.speed = speed;
     }
     
     public void onBorders(){
-        if(getX() == 0 || getX() == getWorld().getWidth()-1)
+        if(isAtEdge()==true)
             getWorld().removeObject(this);
     }
 }

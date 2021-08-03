@@ -1,3 +1,4 @@
+import java.util.*;
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 public class Astronaut extends Actor
@@ -8,9 +9,11 @@ public class Astronaut extends Actor
     private boolean isFlying = false;
     private boolean isFalling = true;
     private int skytime = 0;
+    private int gravity;
     private boolean spacePressed = false;
     private int lifes = 3;
     private int score = 0;
+    private int diamonds = 0;
     private int groundHeight = getImage().getHeight()/2; 
     private int groundWidth = getImage().getWidth()/2;
     GifImage goingFront = new GifImage("Astronauta caminando.gif");
@@ -34,27 +37,36 @@ public class Astronaut extends Actor
     }
 
     public void shoot(){
-        Laser laser = new Laser();
-        if(lookingTo == 0)
-            laser.setSpeed(5);
-        else
-            laser.setSpeed(-5);
-        if(Greenfoot.isKeyDown("space") && spacePressed == false){
-            getWorld().addObject(laser, getX(), getY());
-            spacePressed = true;
-        }else if(!Greenfoot.isKeyDown("space"))
-            spacePressed = false;
+        List<Laser> lasers = new ArrayList();
+        for(Object obj: getWorld().getObjects(Laser.class)){
+            lasers.add((Laser)obj);
+        }
+        if (lasers.size() < 3){
+            Laser laser = new Laser();
+            if(lookingTo == 0)
+                laser.setSpeed(5);
+            else
+                laser.setSpeed(-5);
+            if(Greenfoot.isKeyDown("space") && spacePressed == false){
+                getWorld().addObject(laser, getX(), getY());
+                spacePressed = true;
+            }else if(!Greenfoot.isKeyDown("space"))
+                spacePressed = false;      
+        }
     }
 
     public void fly(){
+        gravity = (int)((SWorld)getWorld()).getGravity();
+        int elevation = 10 - (gravity*10);
+        elevation = (elevation >= 1) ? elevation : 1;
         if(Greenfoot.isKeyDown("up")){
             if(skytime>0){
-                setLocation(getX(),getY()-3);
+                setLocation(getX(),getY()-(int)elevation/2);
                 vSpeed = 0;
                 isFalling = false;
                 isMoving = true;
                 isFlying = true;
-                skytime--;
+                skytime-=(gravity*20 >= 1) ? gravity*20 : 1 ;
             }else{
                 isFalling = true;
                 isFlying = false;
@@ -111,9 +123,11 @@ public class Astronaut extends Actor
 
     public void fall(){
         if(touchingGround()[0] == 1){
+            gravity = (int)((SWorld)getWorld()).getGravity();
             vSpeed = 0;
             isFalling = false;
-            skytime = (int)(((SWorld)getWorld()).getGravity() * 100);
+            skytime = (100-(gravity*100))/2;
+            skytime = (skytime >= 50) ? skytime : 50;
             setLocation(getX(), touchingGround()[1]);
         }else{
             vSpeed += ((SWorld)getWorld()).getGravity();
@@ -124,6 +138,7 @@ public class Astronaut extends Actor
     
     public void die(){
         if(lifes == 0){
+            ((SWorld)getWorld()).stopMusic();
             getWorld().removeObject(this);
             Greenfoot.setWorld(new GameOver());
         }
@@ -169,13 +184,24 @@ public class Astronaut extends Actor
             setImage(new GreenfootImage("Astronauta de espalda.png"));
         }
     }
+    public void setVSpeed(int vSpeed){
+        this.vSpeed = vSpeed;
+    }
 
     public int getScore(){
         return this.score;
     }
 
     public void addPoints(int points){
-        this.score += points;
+        ((Score) getWorld().getObjects(Score.class).get(0)).add(points);
+    }
+    
+    public int getDiamonds(){
+        return this.diamonds;    
+    }
+    
+    public void addDiamond(){
+        ((Diamonds)getWorld().getObjects(Diamonds.class).get(0)).add();
     }
 
     public int getLifes(){
@@ -188,6 +214,12 @@ public class Astronaut extends Actor
 
     public void loseLife(int damage){
         skytime = 0;
+        Lifes life = new Lifes();
+        for(Object obj: getWorld().getObjects(Lifes.class)){
+            life = (Lifes)obj;
+        }
+        getWorld().removeObject(life);
+        
         this.lifes -= damage;
     }
     

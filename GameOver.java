@@ -19,6 +19,8 @@ public class GameOver extends World
     private boolean downPressed = false;
     private boolean spacePressed = false;
     private boolean enterPressed = false;
+    GreenfootSound backgroundMusic = new GreenfootSound("GameOver.mp3");
+    Score score = SWorld.getScore();
 
     public GameOver()
     {    
@@ -26,12 +28,14 @@ public class GameOver extends World
         super(900, 475, 1); 
         prepare();
     }
+    
     /**
      * Prepare the world for the start of the program.
      * That is: create the initial objects and add them to the world.
      */
     private void prepare()
     {
+        addObject(score, 459, 298);
         Retry retry = new Retry();
         addObject(retry,445,353);
         Back back = new Back();
@@ -42,6 +46,7 @@ public class GameOver extends World
     }
     
     public void act(){
+        backgroundMusic.playLoop();
         if(Greenfoot.isKeyDown("up")&& upPressed ==false){
             opcion--;
             upPressed = true;
@@ -63,12 +68,15 @@ public class GameOver extends World
             switch(opcion){
                 case 0:
                     Greenfoot.setWorld(new Mlendo());
+                    backgroundMusic.stop();
                     break;
                 case 1:
                     Greenfoot.setWorld(new Menu());
+                    backgroundMusic.stop();
                     break;
                 case 2:
                     Greenfoot.stop();
+                    backgroundMusic.stop();
                     break;
             }
         }else if(!Greenfoot.isKeyDown("Space"))
